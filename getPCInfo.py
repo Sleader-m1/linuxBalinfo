@@ -10,7 +10,7 @@ from urllib.request import urlopen
 import re as r
 import cpuinfo
 
-import socket,re,uuid,psutil,logging,getpass
+import socket,re,uuid,psutil,getpass
 
 json_config = None
 config_path = __file__.replace("getPCInfo.py","config.json")
@@ -163,6 +163,20 @@ def getDisks():
 def getFullInformation():
     arm = getARMInfo()
     global json_config 
+
+    serial_number = ''
+    osType = ''
+    osName = ''
+    hostName = ''
+    userName = ''
+    localIP = ''
+    globalIP = ''
+    macAddress = ''
+    cpuName = ''
+    ramSpace = ''
+    applications = ''
+    disks = ''
+
     result = {
         "Uptime" : f"{round(time.time() - start_time, 1)}",
         "Access_Token": json_config["token"],
@@ -206,6 +220,7 @@ def cicleRequest():
         "Error_Messages":[]
     }
 
+
     url = 'http://81.200.152.218:3000/api/Devices/repeated'
 
     #use the 'headers' parameter to set the HTTP headers:
@@ -230,22 +245,21 @@ def checkToken(token):
     return False
 
 def authorize():
-    if not os.path.exists(config_path):
-        config = open(config_path, "w")
-        config.write("""
-    {
-        "version":null,
-        "token": null,
-        "inventory_num": null
-    }
-                     """)
-        config.close()
+    # if not os.path.exists(config_path):
+    #     config = open(config_path, "w")
+    #     config.write("""
+    # {
+    #     "version":null,
+    #     "token": null,
+    #     "inventory_num": null
+    # }
+    #                  """)
+    #     config.close()
 
 
     config = open(config_path)    
     global json_config
     json_config = json.load(config)
-    print("done")
     if json_config['token'] is None:
         print("Введите токен:")
         new_token = input()
@@ -259,7 +273,8 @@ def authorize():
 
 def main():
     authorize()
-    autostart()
+    print(config_path)
+    #autostart()
     while not primaryPOSTRequest():
         time.sleep(180000)
     interval = 1
