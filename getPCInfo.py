@@ -354,6 +354,7 @@ def main():
     authorize()
     autostart()
     while not primaryPOSTRequest():
+        print('Trying primary again!')
         time.sleep(180000)
     print('Primary is ok!')
     interval = 1
@@ -361,6 +362,7 @@ def main():
         time.sleep(interval)
         if not cicleRequest():
             interval = 300000
+            print('Trying cicle again!')
         else:
             interval = 1800000
             print('Cicle is ok!')
