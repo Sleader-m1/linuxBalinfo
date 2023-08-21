@@ -20,11 +20,8 @@ def autostart():
     service_path = f"/etc/systemd/system/{service_name}.service"
     
 
-    print(__file__)
-
     if not os.path.exists(service_path):
     # Создание файла сервиса
-        print("Not exists")
         with open(service_path, "w") as f:
             f.write(f'''[Unit]
                 Description=Start {service_name}
@@ -161,9 +158,7 @@ def getDisks():
     return result
 
 def getFullInformation():
-    arm = getARMInfo()
-    global json_config 
-
+    arm = ''
     serial_number = ''
     osType = ''
     osName = ''
@@ -174,29 +169,98 @@ def getFullInformation():
     macAddress = ''
     cpuName = ''
     ramSpace = ''
-    applications = ''
-    disks = ''
+    applications = []
+    disks = []
+    global json_config 
+    Error_messages = []
+    
+    try:
+        arm = getARMInfo()
+    except:
+        Error_messages.append('Error while collecting ARM info!')
+
+    try:
+        serial_number = get_serial_number()
+    except:
+        Error_messages.append('Error while collecting serisl number!')
+
+    try:
+        osType = getOS()
+    except:
+        Error_messages.append('Error while collecting OS type!')
+
+    try:
+        osName = getOSType()
+    except:
+        Error_messages.append('Error while collecting OS name!')
+
+    try:
+        hostName = getHostname()
+    except:
+        Error_messages.append('Error while collecting host name!')
+
+    try:
+        userName = getUsername()
+    except:
+        Error_messages.append('Error while collecting user name!')
+
+    try:
+        localIP = getLocalIP()
+    except:
+        Error_messages.append('Error while collecting local IP!')
+
+    try:
+        globalIP = getGlobalIP()
+    except:
+        Error_messages.append('Error while collecting global IP!')
+
+    try:
+        macAddress = getMAC()
+    except:
+        Error_messages.append('Error while collecting MAC address!')
+
+    try:
+        cpuName = getCPUName()
+    except:
+        Error_messages.append('Error while collecting CPU name!')
+
+    try:
+        ramSpace = getRAMSpace()
+    except:
+        Error_messages.append('Error while collecting RAM space!')
+
+    try:
+        applications = get_package_list()
+    except:
+        Error_messages.append('Error while collecting applications!')
+
+    try:
+        disks = getDisks()
+    except:
+        Error_messages.append('Error while collecting disks!')
+
 
     result = {
         "Uptime" : f"{round(time.time() - start_time, 1)}",
         "Access_Token": json_config["token"],
-        "Serial_Number" : get_serial_number(),
+        "Serial_Number" : serial_number,
         "Manufacturer": arm["Manufacturer"],
         "ARM_Name": arm["ARM_Name"],
         "ARM_Type": arm["ARM_Type"],
-        "OS_Type": getOS(),
-        "OS_Name": getOSType(),
-        "Host_Name": getHostname(),
-        "User_Name": getUsername(),
-        "Local_IP": getLocalIP(), 
-        "Global_IP": getGlobalIP(),
-        "MAC_Address": getMAC(),
+        "OS_Type": osType,
+        "OS_Name": osName,
+        "Host_Name": hostName,
+        "User_Name": userName,
+        "Local_IP": localIP, 
+        "Global_IP": globalIP,
+        "MAC_Address": macAddress,
         "Agent_Version": json_config["version"],
-        "CPU_Name": getCPUName(),
-        "RAM_Space": getRAMSpace(),
-        "Applications": get_package_list(),
+        "CPU_Name": cpuName,
+        "RAM_Space": ramSpace,
+        "Applications": applications,
         "Local_Network":[],
-        "Disks":getDisks()
+        "Disks":disks,
+        "Error_Messages" : Error_messages
     }
     return json.dumps(result)
 
@@ -212,12 +276,27 @@ def primaryPOSTRequest():
 
 def cicleRequest():
     global json_config  
+    error_messages = []
+
+    disks = []
+    applications = []
+
+    try:
+        applications = get_package_list()
+    except:
+        error_messages.append('Error while collecting applications!')
+
+    try:
+        disks = getDisks()
+    except:
+        error_messages.append('Error while collecting disks!')
+
     result = {
         "Uptime" : f"{round(time.time() - start_time, 1)}",
         "Access_Token": json_config["token"],
-        "Applications": get_package_list(),
-        "Disks":getDisks(),
-        "Error_Messages":[]
+        "Applications": applications,
+        "Disks":disks,
+        "Error_Messages":error_messages
     }
 
 
@@ -273,10 +352,10 @@ def authorize():
 
 def main():
     authorize()
-    print(config_path)
-    #autostart()
+    autostart()
     while not primaryPOSTRequest():
         time.sleep(180000)
+    print('Primary is ok!')
     interval = 1
     while True:
         time.sleep(interval)
@@ -284,5 +363,6 @@ def main():
             interval = 300000
         else:
             interval = 1800000
+            print('Cicle is ok!')
 
 main()
