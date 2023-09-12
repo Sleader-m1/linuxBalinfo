@@ -43,7 +43,7 @@ def autostart():
         print("Exists")
 
 # def getPCInfo():
-#     command = "sudo lshw -short"
+#     command = "lshw -short"
 #     process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 #     output, error = process.communicate()
 #     if error:
@@ -61,7 +61,7 @@ start_time = time.time()
 
 def get_serial_number():
     try:
-        output = subprocess.check_output(["sudo", "dmidecode", "-s", "system-serial-number"])
+        output = subprocess.check_output([ "dmidecode", "-s", "system-serial-number"])
         serial_number = output.decode().strip()
         return serial_number
     except subprocess.CalledProcessError:
@@ -101,6 +101,7 @@ def get_package_list():
         output = subprocess.check_output(command, shell=True)
         package_list = output.decode("utf-8").strip().split("\n")
         parsed_packages = [{"name":"-".join(package.split("-")[0:-2]), "version" : package.split("-")[-2]} for package in package_list]
+        print(parsed_packages)
         return parsed_packages
 
     except subprocess.CalledProcessError:
