@@ -61,7 +61,7 @@ start_time = time.time()
 
 def get_serial_number():
     try:
-        output = subprocess.check_output([ "dmidecode", "-s", "system-serial-number"])
+        output = subprocess.check_output(["sudo", "dmidecode", "-s", "system-serial-number"])
         serial_number = output.decode().strip()
         return serial_number
     except subprocess.CalledProcessError:
@@ -95,13 +95,12 @@ def getLocalIP():
 
 
 def get_package_list():
-    return [{"name":"hui", "version":"1"}]
-    command = "dpkg -l"
+    command = "rpm -qa"
 
     try:
         output = subprocess.check_output(command, shell=True)
-        package_list = output.decode("utf-8").strip().split("\n")[7:]
-        parsed_packages = [{"name":package.split()[1], "version" : package.split()[2]} for package in package_list]
+        package_list = output.decode("utf-8").strip().split("\n")
+        parsed_packages = [{"name":"-".join(package.split("-")[0:-2]), "version" : package.split("-")[-2]} for package in package_list]
         return parsed_packages
 
     except subprocess.CalledProcessError:
@@ -115,7 +114,7 @@ def getCPUName():
 
 
 def getARMInfo():
-    command = "lshw"
+    command = "sudo lshw"
 
     try:
         output = subprocess.check_output(command, shell=True).decode("utf-8").strip().split("\n")[1:4]
@@ -179,69 +178,69 @@ def getFullInformation():
     try:
         arm = getARMInfo()
     except:
-        Error_messages.append({"message": 'Error while collecting ARM info!'})
+        Error_messages.append('Error while collecting ARM info!')
 
     try:
         serial_number = get_serial_number()
     except:
-        Error_messages.append({"message": 'Error while collecting serisl number!'})
+        Error_messages.append('Error while collecting serisl number!')
 
     try:
         osType = getOS()
     except:
-        Error_messages.append({"message": 'Error while collecting OS type!'})
+        Error_messages.append('Error while collecting OS type!')
 
     try:
         osName = getOSType()
     except:
-        Error_messages.append({"message": 'Error while collecting OS name!'})
+        Error_messages.append('Error while collecting OS name!')
 
     try:
         hostName = getHostname()
     except:
-        Error_messages.append({"message": 'Error while collecting host name!'})
+        Error_messages.append('Error while collecting host name!')
 
     try:
         userName = getUsername()
     except:
-        Error_messages.append({"message": 'Error while collecting user name!'})
+        Error_messages.append('Error while collecting user name!')
 
     try:
         localIP = getLocalIP()
     except:
-        Error_messages.append({"message": 'Error while collecting local IP!'})
+        Error_messages.append('Error while collecting local IP!')
 
     try:
         globalIP = getGlobalIP()
     except:
-        Error_messages.append({"message": 'Error while collecting global IP!'})
+        Error_messages.append('Error while collecting global IP!')
 
     try:
         macAddress = getMAC()
     except:
-        Error_messages.append({"message": 'Error while collecting MAC address!'})
+        Error_messages.append('Error while collecting MAC address!')
 
     try:
         cpuName = getCPUName()
     except:
-        Error_messages.append({"message": 'Error while collecting CPU name!'})
+        Error_messages.append('Error while collecting CPU name!')
 
     try:
         ramSpace = getRAMSpace()
     except:
-        Error_messages.append({"message": 'Error while collecting RAM space!'})
+        Error_messages.append('Error while collecting RAM space!')
 
     try:
         applications = get_package_list()
     except:
-        Error_messages.append({"message": 'Error while collecting applications!'})
+        Error_messages.append('Error while collecting applications!')
 
     try:
         disks = getDisks()
     except:
-        Error_messages.append({"message": 'Error while collecting disks!'})
+        Error_messages.append('Error while collecting disks!')
 
-    print(Error_messages)
+
     result = {
         "Uptime" : str({round(time.time() - start_time, 1)}),
         "Access_Token": json_config["token"],
@@ -287,12 +286,12 @@ def cicleRequest():
     try:
         applications = get_package_list()
     except:
-        error_messages.append({"message": 'Error while collecting applications!'})
+        error_messages.append('Error while collecting applications!')
 
     try:
         disks = getDisks()
     except:
-        error_messages.append({"message": 'Error while collecting disks!'})
+        error_messages.append('Error while collecting disks!')
 
     result = {
         "Uptime" : str({round(time.time() - start_time, 1)}),
@@ -355,7 +354,7 @@ def authorize():
 
 def main():
     authorize()
-    #autostart()
+    autostart()
     while not primaryPOSTRequest():
         print('Trying primary again!')
         time.sleep(300)
