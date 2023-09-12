@@ -14,10 +14,11 @@ import socket,re,uuid,psutil,getpass
 
 json_config = None
 config_path = __file__.replace("getPCInfo.py","config.json")
+print(__file__)
 
 def autostart():
     service_name = os.path.basename(__file__).replace(".py", "")
-    service_path = f"/etc/systemd/system/{service_name}.service"
+    service_path = "/etc/systemd/system/getPCInfo.service"
     
 
     if not os.path.exists(service_path):
@@ -37,7 +38,7 @@ def autostart():
             os.system("systemctl daemon-reload")
     
         # Включение автозапуска сервиса
-        os.system(f"systemctl enable {service_name}.service")
+        os.system("systemctl enable "+service_name+".service")
     else:
         print("Exists")
 
@@ -145,8 +146,8 @@ def getDisks():
         disk_name = partition.device
         disk_usage = psutil.disk_usage(partition.mountpoint)
         disk_info[disk_name] = {
-            'space': f"{convert_bytes(disk_usage.total)}",
-            'free': f"{convert_bytes(disk_usage.free)}"
+            'space': str({convert_bytes(disk_usage.total)}),
+            'free': str({convert_bytes(disk_usage.free)})
         }
 
     result = []
@@ -241,7 +242,7 @@ def getFullInformation():
 
 
     result = {
-        "Uptime" : f"{round(time.time() - start_time, 1)}",
+        "Uptime" : str({round(time.time() - start_time, 1)}),
         "Access_Token": json_config["token"],
         "Serial_Number" : serial_number,
         "Manufacturer": arm["Manufacturer"],
@@ -272,6 +273,7 @@ def primaryPOSTRequest():
     #use the 'headers' parameter to set the HTTP headers:
     x = requests.post(url, data = myobj, headers = {"Content-Type": "application/json", "User-Agent" : "PostmanRuntime/7.32.3"})
 
+    print(x.text)
     return json.loads(x.text)["message"] == "OK"
 
 def cicleRequest():
@@ -292,7 +294,7 @@ def cicleRequest():
         error_messages.append('Error while collecting disks!')
 
     result = {
-        "Uptime" : f"{round(time.time() - start_time, 1)}",
+        "Uptime" : str({round(time.time() - start_time, 1)}),
         "Access_Token": json_config["token"],
         "Applications": applications,
         "Disks":disks,
@@ -324,16 +326,16 @@ def checkToken(token):
     return False
 
 def authorize():
-    # if not os.path.exists(config_path):
-    #     config = open(config_path, "w")
-    #     config.write("""
-    # {
-    #     "version":null,
-    #     "token": null,
-    #     "inventory_num": null
-    # }
-    #                  """)
-    #     config.close()
+    if not os.path.exists(config_path):
+        config = open(config_path, "w")
+        config.write("""
+    {
+        "version":null,
+        "token": null,
+        "inventory_num": null
+    }
+                     """)
+        config.close()
 
 
     config = open(config_path)    
@@ -355,16 +357,17 @@ def main():
     autostart()
     while not primaryPOSTRequest():
         print('Trying primary again!')
-        time.sleep(180000)
+        time.sleep(300)
     print('Primary is ok!')
-    interval = 1
+    interval = 0
     while True:
+        print("In cicle")
         time.sleep(interval)
         if not cicleRequest():
-            interval = 300000
+            interval = 300
             print('Trying cicle again!')
         else:
-            interval = 1800000
+            interval = 1800
             print('Cicle is ok!')
 
 main()
