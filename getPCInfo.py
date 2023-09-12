@@ -28,7 +28,7 @@ def autostart():
                 Description=Start {service_name}
 
                 [Service]
-                ExecStart=/bin/python3 {__file__}
+                ExecStart=python3 {__file__}
                 Restart=always
                 RestartSec=3
 
