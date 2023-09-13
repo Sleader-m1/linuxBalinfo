@@ -179,67 +179,67 @@ def getFullInformation():
     try:
         arm = getARMInfo()
     except:
-        Error_messages.append('Error while collecting ARM info!')
+        Error_messages.append({"message": 'Error while collecting ARM info!'})
 
     try:
         serial_number = get_serial_number()
     except:
-        Error_messages.append('Error while collecting serisl number!')
+        Error_messages.append({"message": 'Error while collecting serisl number!'})
 
     try:
         osType = getOS()
     except:
-        Error_messages.append('Error while collecting OS type!')
+        Error_messages.append({"message": 'Error while collecting OS type!'})
 
     try:
         osName = getOSType()
     except:
-        Error_messages.append('Error while collecting OS name!')
+        Error_messages.append({"message": 'Error while collecting OS name!'})
 
     try:
         hostName = getHostname()
     except:
-        Error_messages.append('Error while collecting host name!')
+        Error_messages.append({"message": 'Error while collecting host name!'})
 
     try:
         userName = getUsername()
     except:
-        Error_messages.append('Error while collecting user name!')
+        Error_messages.append({"message": 'Error while collecting user name!'})
 
     try:
         localIP = getLocalIP()
     except:
-        Error_messages.append('Error while collecting local IP!')
+        Error_messages.append({"message": 'Error while collecting local IP!'})
 
     try:
         globalIP = getGlobalIP()
     except:
-        Error_messages.append('Error while collecting global IP!')
+        Error_messages.append({"message": 'Error while collecting global IP!'})
 
     try:
         macAddress = getMAC()
     except:
-        Error_messages.append('Error while collecting MAC address!')
+        Error_messages.append({"message": 'Error while collecting MAC address!'})
 
     try:
         cpuName = getCPUName()
     except:
-        Error_messages.append('Error while collecting CPU name!')
+        Error_messages.append({"message": 'Error while collecting CPU name!'})
 
     try:
         ramSpace = getRAMSpace()
     except:
-        Error_messages.append('Error while collecting RAM space!')
+        Error_messages.append({"message": 'Error while collecting RAM space!'})
 
     try:
         applications = get_package_list()
     except:
-        Error_messages.append('Error while collecting applications!')
+        Error_messages.append({"message": 'Error while collecting applications!'})
 
     try:
         disks = getDisks()
     except:
-        Error_messages.append('Error while collecting disks!')
+        Error_messages.append({"message": 'Error while collecting disks!'})
 
 
     result = {
@@ -287,12 +287,12 @@ def cicleRequest():
     try:
         applications = get_package_list()
     except:
-        error_messages.append('Error while collecting applications!')
+        error_messages.append({"message":'Error while collecting applications!'})
 
     try:
         disks = getDisks()
     except:
-        error_messages.append('Error while collecting disks!')
+        error_messages.append({"message":'Error while collecting disks!'})
 
     result = {
         "Uptime" : str({round(time.time() - start_time, 1)}),
