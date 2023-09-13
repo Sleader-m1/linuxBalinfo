@@ -25,10 +25,11 @@ def autostart():
     # Создание файла сервиса
         with open(service_path, "w") as f:
             f.write(f'''[Unit]
-                Description=Start {service_name}
+                Description=Start getPCInfo
 
                 [Service]
-                ExecStart=python3 {__file__}
+                User=root
+                ExecStart=python3 ../../../root/linuxBalinfo/getPCInfo.py
                 Restart=always
                 RestartSec=3
 
