@@ -13,6 +13,7 @@ import cpuinfo
 import socket,re,uuid,psutil,getpass
 
 json_config = None
+base_url = "http://81.200.152.218:3000"
 config_path = __file__.replace("getPCInfo.py","config.json")
 
 def autostart():
@@ -94,12 +95,12 @@ def getLocalIP():
 
 
 def get_package_list():
-    command = "rpm -qa"
+    command = "dpkg -l"
 
     try:
         output = subprocess.check_output(command, shell=True)
-        package_list = output.decode("utf-8").strip().split("\n")
-        parsed_packages = [{"name":"-".join(package.split("-")[0:-2]), "version" : package.split("-")[-2]} for package in package_list]
+        package_list = output.decode("utf-8").strip().split("\n")[7:]
+        parsed_packages = [{"name":package.split()[1], "version" : package.split()[2]} for package in package_list]
         return parsed_packages
 
     except subprocess.CalledProcessError:
@@ -177,67 +178,67 @@ def getFullInformation():
     try:
         arm = getARMInfo()
     except:
-        Error_messages.append('Error while collecting ARM info!')
+        Error_messages.append({"message": 'Error while collecting ARM info!'})
 
     try:
         serial_number = get_serial_number()
     except:
-        Error_messages.append('Error while collecting serisl number!')
+        Error_messages.append({"message": 'Error while collecting serisl number!'})
 
     try:
         osType = getOS()
     except:
-        Error_messages.append('Error while collecting OS type!')
+        Error_messages.append({"message": 'Error while collecting OS type!'})
 
     try:
         osName = getOSType()
     except:
-        Error_messages.append('Error while collecting OS name!')
+        Error_messages.append({"message": 'Error while collecting OS name!'})
 
     try:
         hostName = getHostname()
     except:
-        Error_messages.append('Error while collecting host name!')
+        Error_messages.append({"message": 'Error while collecting host name!'})
 
     try:
         userName = getUsername()
     except:
-        Error_messages.append('Error while collecting user name!')
+        Error_messages.append({"message": 'Error while collecting user name!'})
 
     try:
         localIP = getLocalIP()
     except:
-        Error_messages.append('Error while collecting local IP!')
+        Error_messages.append({"message": 'Error while collecting local IP!'})
 
     try:
         globalIP = getGlobalIP()
     except:
-        Error_messages.append('Error while collecting global IP!')
+        Error_messages.append({"message": 'Error while collecting global IP!'})
 
     try:
         macAddress = getMAC()
     except:
-        Error_messages.append('Error while collecting MAC address!')
+        Error_messages.append({"message": 'Error while collecting MAC address!'})
 
     try:
         cpuName = getCPUName()
     except:
-        Error_messages.append('Error while collecting CPU name!')
+        Error_messages.append({"message": 'Error while collecting CPU name!'})
 
     try:
         ramSpace = getRAMSpace()
     except:
-        Error_messages.append('Error while collecting RAM space!')
+        Error_messages.append({"message": 'Error while collecting RAM space!'})
 
     try:
         applications = get_package_list()
     except:
-        Error_messages.append('Error while collecting applications!')
+        Error_messages.append({"message": 'Error while collecting applications!'})
 
     try:
         disks = getDisks()
     except:
-        Error_messages.append('Error while collecting disks!')
+        Error_messages.append({"message": 'Error while collecting disks!'})
 
 
     result = {
@@ -266,7 +267,7 @@ def getFullInformation():
 
 
 def primaryPOSTRequest():
-    url = 'http://81.200.152.218:3000/api/Devices/primary'
+    url = base_url+'/api/Devices/primary'
     myobj = getFullInformation()
 
     #use the 'headers' parameter to set the HTTP headers:
@@ -284,12 +285,12 @@ def cicleRequest():
     try:
         applications = get_package_list()
     except:
-        error_messages.append('Error while collecting applications!')
+        error_messages.append({"message":'Error while collecting applications!'})
 
     try:
         disks = getDisks()
     except:
-        error_messages.append('Error while collecting disks!')
+        error_messages.append({"message":'Error while collecting disks!'})
 
     result = {
         "Uptime" : f"{round(time.time() - start_time, 1)}",
@@ -300,7 +301,7 @@ def cicleRequest():
     }
 
 
-    url = 'http://81.200.152.218:3000/api/Devices/repeated'
+    url = base_url+'/api/Devices/repeated'
 
     #use the 'headers' parameter to set the HTTP headers:
     x = requests.post(url, data = json.dumps(result), headers = {"Content-Type": "application/json", "User-Agent" : "PostmanRuntime/7.32.3"})
@@ -314,7 +315,7 @@ def updateToken(token):
         json.dump(json_config, config_file)
 
 def checkToken(token):
-    url = "http://81.200.152.218:3000/api/Devices/registration"
+    url = base_url+"/api/Devices/registration"
     result = {
         "token": token
     }
