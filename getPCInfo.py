@@ -137,7 +137,7 @@ def getARMInfo():
 
 def convert_bytes(size):
     
-    return round(size / 8589934592, 1)
+    return round(size * 8 / 8589934592, 1)
 
 def getDisks():
     partitions = psutil.disk_partitions()
@@ -153,9 +153,9 @@ def getDisks():
     result = []
 
     for disk, info in disk_info.items():
-        result.append(info)
+        if(float(info['space']) > 1):
+            result.append(info)
     
-    return result
 
 def getFullInformation():
     arm = ''
