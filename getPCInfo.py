@@ -240,9 +240,8 @@ def getFullInformation():
     except:
         Error_messages.append({"message": 'Error while collecting disks!'})
 
-
     result = {
-        "Uptime" : f"{round(time.time() - start_time, 1)}",
+        "Uptime" : f"{int(time.time() - start_time)}",
         "Access_Token": json_config["token"],
         "Serial_Number" : serial_number,
         "Manufacturer": arm["Manufacturer"],
@@ -293,7 +292,7 @@ def cicleRequest():
         error_messages.append({"message":'Error while collecting disks!'})
 
     result = {
-        "Uptime" : f"{round(time.time() - start_time, 1)}",
+        "Uptime" : f"{int(time.time() - start_time)}",
         "Access_Token": json_config["token"],
         "Applications": applications,
         "Disks":disks,
@@ -353,7 +352,7 @@ def authorize():
 
 def main():
     authorize()
-    autostart()
+    #autostart()
     while not primaryPOSTRequest():
         time.sleep(180000)
     print('Primary is ok!')
@@ -361,9 +360,9 @@ def main():
     while True:
         time.sleep(interval)
         if not cicleRequest():
-            interval = 300000
+            interval = 60*5
         else:
-            interval = 1800000
+            interval = 5#60*30
             print('Cicle is ok!')
 
 main()
