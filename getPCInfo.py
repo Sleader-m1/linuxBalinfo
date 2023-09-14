@@ -75,7 +75,7 @@ def getOS():
     return platform.system()
 
 def getOSType():
-    return platform.version().split()[0]
+    return platform.version()
 
 def getHostname():
     return socket.gethostname()
