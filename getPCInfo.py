@@ -237,8 +237,8 @@ def getFullInformation():
 
     try:
         disks = getDisks()
-    except:
-        Error_messages.append({"message": 'Error while collecting disks!'})
+    except Exception as e:
+        Error_messages.append({"message": f"Error while collecting disks! {e}"})
 
 
     print(osName)
