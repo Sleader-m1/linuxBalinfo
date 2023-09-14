@@ -238,6 +238,7 @@ def getFullInformation():
         disks = getDisks()
     except Exception as e:
         Error_messages.append({"message": f"Error while collecting disks! {e}"})
+        print(e)
 
     
     print(disks)
