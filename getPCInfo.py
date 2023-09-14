@@ -14,7 +14,6 @@ import socket,re,uuid,psutil,getpass
 
 json_config = None
 config_path = __file__.replace("getPCInfo.py","config.json")
-print(__file__)
 
 def autostart():
     service_name = os.path.basename(__file__).replace(".py", "")
@@ -40,8 +39,6 @@ def autostart():
     
         # Включение автозапуска сервиса
         os.system("systemctl enable "+service_name+".service")
-    else:
-        print("Exists")
 
 # def getPCInfo():
 #     command = "lshw -short"
