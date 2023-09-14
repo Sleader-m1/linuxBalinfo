@@ -74,7 +74,7 @@ def getOS():
     return platform.system()
 
 def getOSType():
-    return platform.version().split()[0]
+    return platform.version()
 
 def getHostname():
     return socket.gethostname()
@@ -240,6 +240,8 @@ def getFullInformation():
     except:
         Error_messages.append({"message": 'Error while collecting disks!'})
 
+
+    print(osName)
     result = {
         "Uptime" : f"{int(time.time() - start_time)}",
         "Access_Token": json_config["token"],
