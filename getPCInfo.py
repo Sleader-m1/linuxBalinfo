@@ -239,8 +239,8 @@ def getFullInformation():
     except Exception as e:
         Error_messages.append({"message": f"Error while collecting disks! {e}"})
 
-
-    print(osName)
+    
+    print(disks)
     result = {
         "Uptime" : f"{int(time.time() - start_time)}",
         "Access_Token": json_config["token"],
