@@ -312,7 +312,7 @@ def updateToken(token):
         json.dump(json_config, config_file)
 
 def checkToken(token):
-    print("Подождите, пожалуйста. Проверяем токен")
+    print("Подождите, пожалуйста. Проверяем токен...")
     url = "http://81.200.152.218:3000/api/Devices/registration"
     result = {
         "token": token
@@ -352,19 +352,21 @@ def authorize():
 def main():
     authorize()
     autostart()
+    print("Запрос доступа к главному серверу…")
     while not primaryPOSTRequest():
-        print('Trying primary again!')
+        print('Главный сервер не может предоставить доступ данному устройству, обратитесь к системному администратору')
         time.sleep(300)
-    print('Primary is ok!')
+    print('Доступ получен')
     interval = 0
     while True:
-        print("In cicle")
+        print("Запрос на отправку информации главному серверу")
         time.sleep(interval)
         if not cicleRequest():
+            print('Главный сервер не может предоставить доступ данному устройству, обратитесь к системному администратору')
             interval = 300
-            print('Trying cicle again!')
         else:
+            print('Доступ получен')
+            print('Программа запущена, нажмите Crtl + C для сохранения доступа к главному серверу и выходу из Терминала')
             interval = 1800
-            print('Cicle is ok!')
 
 main()
