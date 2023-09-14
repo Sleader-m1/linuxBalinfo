@@ -313,6 +313,7 @@ def updateToken(token):
         json.dump(json_config, config_file)
 
 def checkToken(token):
+    print("Подождите, пожалуйста. Проверяем токен")
     url = base_url+"/api/Devices/registration"
     result = {
         "token": token
