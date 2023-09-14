@@ -153,8 +153,7 @@ def getDisks():
     result = []
 
     for disk, info in disk_info.items():
-        if(float(info['space']) > 1):
-            result.append(info)
+        result.append(info)
     
     return result
 
