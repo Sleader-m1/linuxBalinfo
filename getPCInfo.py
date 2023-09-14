@@ -234,11 +234,11 @@ def getFullInformation():
     except:
         Error_messages.append({"message": 'Error while collecting applications!'})
 
-    try:
-        disks = getDisks()
-    except Exception as e:
-        Error_messages.append({"message": f"Error while collecting disks! {e}"})
-        print(e)
+    #try:
+    disks = getDisks()
+    #except Exception as e:
+     #   Error_messages.append({"message": f"Error while collecting disks! {e}"})
+      #  print(e)
 
     
     print(disks)
