@@ -312,6 +312,7 @@ def updateToken(token):
         json.dump(json_config, config_file)
 
 def checkToken(token):
+    print("Подождите, пожалуйста. Проверяем токен")
     url = "http://81.200.152.218:3000/api/Devices/registration"
     result = {
         "token": token
