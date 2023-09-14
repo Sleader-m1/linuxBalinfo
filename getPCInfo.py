@@ -354,7 +354,7 @@ def authorize():
 
 def main():
     authorize()
-    #autostart()
+    autostart()
     while not primaryPOSTRequest():
         time.sleep(180000)
     print('Primary is ok!')
