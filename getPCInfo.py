@@ -39,8 +39,6 @@ def autostart():
     
         # Включение автозапуска сервиса
         os.system(f"systemctl enable {service_name}.service")
-    else:
-        print("Exists")
 
 # def getPCInfo():
 #     command = "sudo lshw -short"
@@ -231,14 +229,11 @@ def getFullInformation():
     except:
         Error_messages.append({"message": 'Error while collecting applications!'})
 
-    #try:
+    try:
     disks = getDisks()
-    #except Exception as e:
-     #   Error_messages.append({"message": f"Error while collecting disks! {e}"})
-      #  print(e)
+    except:
+        Error_messages.append({"message": f"Error while collecting disks!"})
 
-    
-    print(disks)
     result = {
         "Uptime" : f"{int(time.time() - start_time)}",
         "Access_Token": json_config["token"],
