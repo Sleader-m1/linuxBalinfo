@@ -139,26 +139,21 @@ def getARMInfo():
 
 def convert_bytes(size):
     
-    return round(size / 8589934592, 1)
+    return round(size * 8 / 8589934592, 1)
 
 def getDisks():
     partitions = psutil.disk_partitions()
-    disk_info = {}
+    disks = {}
+
     for partition in partitions:
-        disk_name = partition.device
         disk_usage = psutil.disk_usage(partition.mountpoint)
-        disk_info[disk_name] = {
-            'space': str({convert_bytes(disk_usage.total)}),
-            'free': str({convert_bytes(disk_usage.free)})
-        }
-
-    result = []
-
-    for disk, info in disk_info.items():
-        if(float(info['space']) > 1):
-            result.append(info)
-    
-    return result
+        if convert_bytes(disk_usage.total) > 1: 
+            disk_info = {
+                'space': f"{convert_bytes(disk_usage.total)}",
+                'free': f"{convert_bytes(disk_usage.free)}"
+            }
+            disks[partition.device] = disk_info
+    return [disks[disk] for disk in disks]
 
 def getFullInformation():
     arm = ''
