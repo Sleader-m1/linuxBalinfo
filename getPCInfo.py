@@ -102,7 +102,6 @@ def get_package_list():
         output = subprocess.check_output(command, shell=True)
         package_list = output.decode("utf-8").strip().split("\n")
         parsed_packages = [{"name":"-".join(package.split("-")[0:-2]), "version" : package.split("-")[-2]} for package in package_list]
-        print(parsed_packages)
         return parsed_packages
 
     except subprocess.CalledProcessError:
@@ -116,7 +115,7 @@ def getCPUName():
 
 
 def getARMInfo():
-    command = "sudo lshw"
+    command = "lshw"
 
     try:
         output = subprocess.check_output(command, shell=True).decode("utf-8").strip().split("\n")[1:4]
@@ -270,7 +269,7 @@ def primaryPOSTRequest():
     #use the 'headers' parameter to set the HTTP headers:
     x = requests.post(url, data = myobj, headers = {"Content-Type": "application/json", "User-Agent" : "PostmanRuntime/7.32.3"})
 
-    print(x.text)
+    
     return json.loads(x.text)["message"] == "OK"
 
 def cicleRequest():
